@@ -19,7 +19,11 @@ REM   The autoupdater first use and check the official rdpwrap.ini.
 REM   If a new termsrv.dll is not supported in the offical rdpwrap.ini,
 REM   autoupdater first tries the asmtron rdpwrap.ini (disassembled and
 REM   tested by asmtron). The autoupdater will also use rdpwrap.ini files
+<<<<<<< HEAD
 REM   of other contributors like the one of "DrDrrae, saurav-biswas".
+=======
+REM   of other contributors like the one of "affinityv, DrDrrae, saurav-biswas".
+>>>>>>> 4cb8c0dd4e9c5653807520bea153c6a5d933a711
 REM   Extra rdpwrap.ini sources can also be defined...
 REM
 REM { Special thanks to binarymaster and all other contributors }
@@ -32,6 +36,10 @@ set rdpwrap_ini_update_github_2="https://raw.githubusercontent.com/affinityv/INI
 set rdpwrap_ini_update_github_3="https://raw.githubusercontent.com/DrDrrae/rdpwrap/master/res/rdpwrap.ini"
 set rdpwrap_ini_update_github_4="https://raw.githubusercontent.com/saurav-biswas/rdpwrap-1/master/res/rdpwrap.ini"
 REM set rdpwrap_ini_update_github_5="https://raw.githubusercontent.com/....Extra.5...."
+<<<<<<< HEAD
+=======
+REM set rdpwrap_ini_update_github_6="https://raw.githubusercontent.com/....Extra.5...."
+>>>>>>> 4cb8c0dd4e9c5653807520bea153c6a5d933a711
 
 set autoupdate_bat="%~dp0autoupdate.bat"
 set autoupdate_log="%~dp0autoupdate.log"
@@ -103,6 +111,7 @@ REM ------------------------------------------
 REM 2) check if listener session rdp-tcp exist
 REM ------------------------------------------
 set rdp_tcp_session=""
+<<<<<<< HEAD
 for /f "tokens=1-2* usebackq" %%a in (
     `query session rdp-tcp`
 ) do (
@@ -110,6 +119,27 @@ for /f "tokens=1-2* usebackq" %%a in (
     set rdp_tcp_session_id=%%b
 )
 if %rdp_tcp_session%=="" (
+=======
+set rdp_tcp_session_id=0
+if exist %windir%\system32\query.exe (
+    for /f "tokens=1-2* usebackq" %%a in (
+        `query session rdp-tcp`
+    ) do (
+        set rdp_tcp_session=%%a
+        set /a rdp_tcp_session_id=%%b 2>NULL
+    )
+) else (
+    for /f "tokens=2* usebackq" %%a in (
+        `reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v "fDenyTSConnections" 2^>nul`
+    ) do (
+        if "%%a"=="REG_DWORD" (
+            set rdp_tcp_session=AllowTSConnection
+            if "%%b"=="0x0" (set rdp_tcp_session_id=1)
+        )
+    )
+)
+if %rdp_tcp_session_id%==0 (
+>>>>>>> 4cb8c0dd4e9c5653807520bea153c6a5d933a711
     echo [-] Listener session rdp-tcp NOT found^^!
     call :install
 ) else (
